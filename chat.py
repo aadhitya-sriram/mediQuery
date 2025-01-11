@@ -1,24 +1,17 @@
 import os
 import re
 import json
-import faiss
 import torch
-from uuid import uuid4
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
-from langchain_core.documents import Document
 from langchain_core.messages import HumanMessage, SystemMessage, RemoveMessage
-from langchain_community.docstore.in_memory import InMemoryDocstore
-from langchain_community.vectorstores import FAISS
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import MessagesState, StateGraph, START, END
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
-    
+
 class State(MessagesState):
     summary: str
 
@@ -33,7 +26,6 @@ class App:
         self.system_prompt = system_prompt
         self.template = template
         self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
-        self.faiss_index = faiss.IndexFlatL2(768)
         self.load_knowledge_base()
         self.load_ner()
         self.set_memory()
