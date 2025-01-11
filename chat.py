@@ -16,7 +16,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain_huggingface import HuggingFaceEmbeddings
-
+from langchain_pinecone import PineconeVectorStore
+from pinecone import Pinecone
+    
 class State(MessagesState):
     summary: str
 
@@ -54,34 +56,9 @@ class App:
         self.ner_tokenizer = AutoTokenizer.from_pretrained(self.ner_model_name, trust_remote_code=True)
 
     def load_knowledge_base(self):
-        if os.path.isdir("./knowledge_base"):
-            self.knowledge_base = FAISS.load_local(
-                "knowledge_base",
-                self.embeddings,
-                allow_dangerous_deserialization=True
-            )
-        else:
-            self.knowledge_base = FAISS(
-                embedding_function=self.embeddings,
-                index=self.faiss_index,
-                docstore=InMemoryDocstore(),
-                index_to_docstore_id={},
-            )
-            loader = PyPDFLoader(r'Documents/medical.pdf')
-            documents = loader.load()
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
-            chunks = text_splitter.split_documents(documents)
-            uuids = [str(uuid4()) for _ in range(len(chunks))]
-            self.knowledge_base.add_documents(documents=chunks, ids=uuids)
-            self.knowledge_base.save_local("knowledge_base")
-
-    def load_past_context(self):
-        self.past_context = FAISS(
-            embedding_function=self.embeddings,
-            index=self.faiss_index,
-            docstore=InMemoryDocstore(),
-            index_to_docstore_id={},
-        )
+        pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+        index = pc.Index(os.getenv("PINECONE_INDEX"))
+        self.knowledge_base = PineconeVectorStore(embedding=self.embeddings, index=index)
 
     def store_past_context(self, page_content):
         document = Document(page_content=page_content)
