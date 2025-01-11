@@ -1,0 +1,13 @@
+streamlit
+langchain
+langchain_groq
+langchain_core
+langchain_community
+transformers
+sentence-transformers
+faiss-cpu
+torch
+requests
+beautifulsoup4
+xmltodict
+python-dotenv
