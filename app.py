@@ -1,6 +1,5 @@
 import streamlit as st
 from chat import App
-from langchain_core.messages import HumanMessage
 
 if 'app_instance' not in st.session_state:
     st.session_state.app_instance = App(
