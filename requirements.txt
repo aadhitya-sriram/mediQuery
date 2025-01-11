@@ -1,5 +1,6 @@
 streamlit
 langchain
+langgraph
 langchain_groq
 langchain_core
 langchain_community
