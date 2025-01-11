@@ -2,6 +2,7 @@ import os
 import re
 import json
 import torch
+from pinecone import Pinecone
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, SystemMessage, RemoveMessage
@@ -10,7 +11,6 @@ from langgraph.graph import MessagesState, StateGraph, START, END
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_pinecone import PineconeVectorStore
-from pinecone import Pinecone
 
 class State(MessagesState):
     summary: str
