@@ -34,6 +34,11 @@ class App:
         self.faiss_index = faiss.IndexFlatL2(768)
         self.load_knowledge_base()
         self.load_ner()
+        self.set_memory()
+        print(f"Using device: {self.device}")
+        self.query_response(self.system_prompt)
+
+    def set_memory(self):
         self.memory = MemorySaver()
         self.workflow = StateGraph(State)
         self.workflow.add_node("conversation", self.call_model)
@@ -43,8 +48,6 @@ class App:
         self.workflow.add_edge("summarize_conversation", END)
         self.app = self.workflow.compile(checkpointer=self.memory)
         self.config = {"configurable": {"thread_id": "4"}}
-        print(f"Using device: {self.device}")
-        self.query_response(self.system_prompt)
 
     def load_ner(self):
         self.ner_model = AutoModelForCausalLM.from_pretrained(self.ner_model_name, torch_dtype=torch.bfloat16, trust_remote_code=True).to(self.device).eval()
