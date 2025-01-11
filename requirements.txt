@@ -9,5 +9,4 @@ faiss-cpu
 torch
 requests
 beautifulsoup4
-xmltodict
 python-dotenv
