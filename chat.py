@@ -67,7 +67,7 @@ class App:
                 docstore=InMemoryDocstore(),
                 index_to_docstore_id={},
             )
-            loader = PyPDFLoader(r'E:\PROJECTS\RAGMedBot\Documents\medical.pdf')
+            loader = PyPDFLoader(r'Documents/medical.pdf')
             documents = loader.load()
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=20)
             chunks = text_splitter.split_documents(documents)
