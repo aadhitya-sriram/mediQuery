@@ -1,5 +1,6 @@
 streamlit
 langchain
+langgraph
 langchain_groq
 langchain_core
 langchain_community
@@ -10,3 +11,4 @@ torch
 requests
 beautifulsoup4
 python-dotenv
+langchain_huggingface
